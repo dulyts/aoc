@@ -1,7 +1,18 @@
-from itertools import permutations 
+from itertools import permutations
+import time
+
+def timeit(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        print('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
+        return result
+    return timed
 
 DEBUG = [
     # 'command'
+    'error',
 ]
 
 def debug_print(command, *args):
@@ -29,24 +40,53 @@ def organize(program, a, b):
     program[1] = a
     program[2] = b
 
-def getValue(amp, program, inputIndex, paramIndex):
-    command = str(program[inputIndex]).zfill(5)
-    if paramIndex == 0:
-        # print('getValue', command)
-        return int(command[-2:])
-    else:
-        paramMode = int(command[-2-paramIndex:-2-paramIndex+1])
-        if paramMode == 0:
-            # print('getValue', program[program[inputIndex + paramIndex]], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
-            return program[program[inputIndex + paramIndex]]
-        elif paramMode == 1:
-            # print('getValue', program[inputIndex + paramIndex], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
-            return program[inputIndex + paramIndex]
-        elif paramMode == 2:
-            return program[amp.relativeBase + program[inputIndex + paramIndex]]
-        else:
-            print('WtfParamMode???', paramMode)
+# def getValue(amp, program, inputIndex, paramIndex):
+#     command = str(program[inputIndex]).zfill(5)
+#     if paramIndex == 0:
+#         # print('getValue', command)
+#         return int(command[-2:])
+#     else:
+#         paramMode = int(command[-2-paramIndex:-2-paramIndex+1])
+#         if paramMode == 0:
+#             # print('getValue', program[program[inputIndex + paramIndex]], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+#             return program[program[inputIndex + paramIndex]]
+#         elif paramMode == 1:
+#             # print('getValue', program[inputIndex + paramIndex], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+#             return program[inputIndex + paramIndex]
+#         elif paramMode == 2:
+#             return program[amp.relativeBase + program[inputIndex + paramIndex]]
+#         else:
+#             print('WtfParamMode???', paramMode)
 
+def getValue(amp, program, inputIndex, paramIndex):
+    paramMode = program[inputIndex] % 10 ** (paramIndex + 2) // 10 ** (paramIndex + 1)
+    if paramMode == 0:
+        # print('getValue', program[program[inputIndex + paramIndex]], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+        return program[program[inputIndex + paramIndex]]
+
+    elif paramMode == 1:
+        # print('getValue', program[inputIndex + paramIndex], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+        return program[inputIndex + paramIndex]
+
+    elif paramMode == 2:
+        return program[amp.relativeBase + program[inputIndex + paramIndex]]
+    else:
+        print('WtfParamMode???', paramMode)
+
+def getSetPos(amp, program, inputIndex, paramIndex):
+    paramMode = program[inputIndex] % 10 ** (paramIndex + 2) // 10 ** (paramIndex + 1)
+    if paramMode == 0:
+        # print('getSetPos', program[program[inputIndex + paramIndex]], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+        return program[inputIndex + paramIndex]
+    elif paramMode == 1:
+        # print('getSetPos', program[inputIndex + paramIndex], inputIndex, paramIndex, int(command[-2-paramIndex:-2-paramIndex+1]))
+        return inputIndex + paramIndex
+    elif paramMode == 2:
+        return amp.relativeBase + program[inputIndex + paramIndex]
+    else:
+        print('WtfsetParamMode???', paramMode)
+
+@timeit
 def part1(amp):
     out = None
     while out == None and not amp.halt:
@@ -58,69 +98,62 @@ def part1(amp):
     return out
     # return (program[0], program[1], program[2])
 
-# def calc(input, command, input1Value, input2Value, outputIndex):
-#     if command == 1:
-#         return input1Value + input2Value
-#     elif command == 2:
-#         return input1Value * input2Value
-#     elif command == 3:
-
 def process(amp):
     program = amp.program
-    cmd = getValue(amp, program, amp.ptr, 0)
+    cmd = program[amp.ptr] % 100
     if cmd == 1:
-        debug_print('command', 'command1', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 3))
-        program[program[amp.ptr+3]] = getValue(amp, program, amp.ptr, 1) + getValue(amp, program, amp.ptr, 2)
+        # debug_print('command', 'command1', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 3))
+        program[getSetPos(amp, program, amp.ptr, 3)] = getValue(amp, program, amp.ptr, 1) + getValue(amp, program, amp.ptr, 2)
         amp.ptr = amp.ptr+4
     elif cmd == 2:
-        debug_print('command', 'command2', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 3))
-        program[program[amp.ptr+3]] = getValue(amp, program, amp.ptr, 1) * getValue(amp, program, amp.ptr, 2)
+        # debug_print('command', 'command2', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 3))
+        program[getSetPos(amp, program, amp.ptr, 3)] = getValue(amp, program, amp.ptr, 1) * getValue(amp, program, amp.ptr, 2)
         amp.ptr = amp.ptr+4
     elif cmd == 3:
-        debug_print('command', 'command3', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), 'input', amp.input)
-        program[program[amp.ptr+1]] = int(amp.input.pop(0))
+        # debug_print('command', 'command3', amp.ptr, getValue(amp, program, amp.ptr, 0), getValue(amp, program, amp.ptr, 1), 'input', amp.input)
+        program[getSetPos(amp, program, amp.ptr, 1)] = int(amp.input.pop(0))
         amp.ptr = amp.ptr+2
     elif cmd == 4:
         output = getValue(amp, program, amp.ptr, 1)
-        debug_print('command', 'command4', amp.ptr, program[amp.ptr+1], getValue(amp, program, amp.ptr, 1), ' output ', output)
+        # debug_print('command', 'command4', amp.ptr, program[amp.ptr+1], getValue(amp, program, amp.ptr, 1), ' output ', output)
         OUTPUT.append(output)
         amp.ptr = amp.ptr+2
         return output
     elif cmd == 5:
-        debug_print('command', 'command5', amp.ptr, ' input: ', program[amp.ptr], program[amp.ptr+1], program[amp.ptr+2])
+        # debug_print('command', 'command5', amp.ptr, ' input: ', program[amp.ptr], program[amp.ptr+1], program[amp.ptr+2])
         if getValue(amp, program, amp.ptr, 1) != 0:
-            debug_print('command', 'command5 input: ', getValue(amp, program, amp.ptr, 1), ' ptrTo: ', getValue(amp, program, amp.ptr, 2))
+            # debug_print('command', 'command5 input: ', getValue(amp, program, amp.ptr, 1), ' ptrTo: ', getValue(amp, program, amp.ptr, 2))
             amp.ptr = getValue(amp, program, amp.ptr, 2)
         else:
             amp.ptr = amp.ptr+3
     elif cmd == 6:
-        debug_print('command', 'command6', amp.ptr, ' input: ', program[amp.ptr], program[amp.ptr+1], program[amp.ptr+2])
+        # debug_print('command', 'command6', amp.ptr, ' input: ', program[amp.ptr], program[amp.ptr+1], program[amp.ptr+2])
         if getValue(amp, program, amp.ptr, 1) == 0:
-            debug_print('command', 'command6 input: ', getValue(amp, program, amp.ptr, 1), ' ptrTo: ', getValue(amp, program, amp.ptr, 2))
+            # debug_print('command', 'command6 input: ', getValue(amp, program, amp.ptr, 1), ' ptrTo: ', getValue(amp, program, amp.ptr, 2))
             amp.ptr = getValue(amp, program, amp.ptr, 2)
         else:
             amp.ptr = amp.ptr+3
     elif cmd == 7:
-        debug_print('command', 'command7', amp.ptr, getValue(amp, program, amp.ptr, 1),' < ', getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 1) < getValue(amp, program, amp.ptr, 2) )
-        program[program[amp.ptr+3]] = (1 if getValue(amp, program, amp.ptr, 1) < getValue(amp, program, amp.ptr, 2) else 0)
+        # debug_print('command', 'command7', amp.ptr, getValue(amp, program, amp.ptr, 1),' < ', getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 1) < getValue(amp, program, amp.ptr, 2) )
+        program[getSetPos(amp, program, amp.ptr, 3)] = (1 if getValue(amp, program, amp.ptr, 1) < getValue(amp, program, amp.ptr, 2) else 0)
         amp.ptr = amp.ptr+4
     elif cmd == 8:
-        debug_print('command', 'command8', amp.ptr, getValue(amp, program, amp.ptr, 1),' == ', getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 1) == getValue(amp, program, amp.ptr, 2) )
-        program[program[amp.ptr+3]] = (1 if getValue(amp, program, amp.ptr, 1) == getValue(amp, program, amp.ptr, 2) else 0)
+        # debug_print('command', 'command8', amp.ptr, getValue(amp, program, amp.ptr, 1),' == ', getValue(amp, program, amp.ptr, 2), getValue(amp, program, amp.ptr, 1) == getValue(amp, program, amp.ptr, 2) )
+        program[getSetPos(amp, program, amp.ptr, 3)] = (1 if getValue(amp, program, amp.ptr, 1) == getValue(amp, program, amp.ptr, 2) else 0)
         amp.ptr = amp.ptr+4
     elif cmd == 9:
-        debug_print('command', 'replative base: ', amp.relativeBase, ' to: ', getValue(amp, program, amp.ptr, 1))
+        # debug_print('command', 'replative base: ', amp.relativeBase, ' to: ', getValue(amp, program, amp.ptr, 1))
         amp.relativeBase += getValue(amp, program, amp.ptr, 1)
         amp.ptr = amp.ptr+2
     elif cmd == 99:
-        debug_print('command', 'command99', amp.ptr)
+        # debug_print('command', 'command99', amp.ptr)
         amp.halt = True
         # return OUTPUT[-1]
     else:
-        debug_print('command', 'wtf??', amp.ptr)
-        debug_print('command', amp.program[amp.ptr])
+        debug_print('error', 'wtf??', amp.ptr)
+        debug_print('error', amp.program[amp.ptr])
         for i in range(0, len(amp.program)):
-            debug_print('command', i, amp.program[i])
+            debug_print('error', i, amp.program[i])
 
         raise Exception('WTF???!?!?!')
 
@@ -147,6 +180,7 @@ def read_file():
     # program = '109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99'.split(',')
     # program = '1102,34915192,34915192,7,4,7,99,0'.split(',')
     # program = '104,1125899906842624,99'.split(',')
+
     for i in range(0, 10000):
         if i < len(program):
             program[i] = int(program[i])
@@ -156,18 +190,25 @@ def read_file():
 
 
 
+start = time.time()
 program = read_file()
-amp = Amp(program, [1], 0, 0)
+amp = Amp(program, [2], 0, 0)
+init_end = time.time()
+print('init_time: ', init_end - start)
 while not amp.halt:
+    process_time = time.time()
     result = part1(amp)
+    process_end = time.time()
+    print('inner_loop_time: ', process_end - process_time)
 
-    print(amp, amp.halt, result, OUTPUT[-1])
-    print(result)
-    # amp.input.append(result)
-    amp.relativeBase = result
-    print(OUTPUT[-1])
+    # print(amp, amp.halt, result, OUTPUT[-1])
+    # print(result)
+    # print(OUTPUT[-1])
 print(OUTPUT)
 
+done = time.time()
+elapsed = done - start
+print(elapsed)
 # max_sum = 0
 # max_solution = None
 # for perm in list(permutations('56789', 5)):
@@ -179,7 +220,7 @@ print(OUTPUT)
 #     ampId = 0
 #     for ampInput in perm:
 #         program = read_file()
-#         amp = Amp(program, [ampInput], ampId, 50)
+#         amp = Amp(program, [ampInput], ampId, 0)
 #         amps.append(amp)
 #         ampId += 1
     
