@@ -1,12 +1,15 @@
 from itertools import permutations
 import time
+from datetime import datetime
 
 def timeit(method):
     def timed(*args, **kw):
         ts = time.time()
+        tsd = datetime.now()
         result = method(*args, **kw)
         te = time.time()
-        print('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
+        ted = datetime.now()
+        print('%s %s %2.2f ms' % (method.__name__, (ted - tsd), (te - ts) * 1000.0))
         return result
     return timed
 
