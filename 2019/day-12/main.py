@@ -171,10 +171,11 @@ def part2_bruteforce():
                     velocities[ip2] -= 1
                     velocities[jp2] += 1
                 
-        asd = True
+        # asd = True
+        all_on_start = True
         for i in range(0, NN):
             moons[i] += velocities[i]
-            asd = asd and init_moons[i] == moons[i]
+            all_on_start = all_on_start and init_moons[i] == moons[i]
         
         
         # if time % 10 == 0:
@@ -201,7 +202,7 @@ def part2_bruteforce():
         #     print('moons', moons)
         #     print('velocities', velocities)
 
-        all_on_start = asd
+        # all_on_start = asd
 
         time += 1
     # for i in moons:
