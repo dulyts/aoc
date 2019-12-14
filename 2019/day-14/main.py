@@ -42,22 +42,45 @@ class Stock():
         self.chemical = chemical
         self.count = 0
         self.rest = 0
+        # part2
+        if self.chemical == 'ORE':
+            self.rest = 1000000000000
 
-    def create(self):
-        if self.chemical != 'ORE':
-            r = RECEIPT[self.chemical]
-            for c in r.input:
-                MINIMAL_REQ[c.name].get(c.unit)
+    def create(self, unit_req):
+        # part1
+        # if self.chemical != 'ORE':
+        #     r = RECEIPT[self.chemical]
+        #     for c in r.input:
+        #         MINIMAL_REQ[c.name].get(c.unit)
 
-            self.count += 1
-            self.rest += r.output.unit
+        #     self.count += 1
+        #     self.rest += r.output.unit
+        # else:
+        #     self.count += 1
+        #     self.rest += 1
+
+        # part2
+        if self.chemical == 'ORE':
+            raise Exception('ORE cant create')
         else:
-            self.count += 1
-            self.rest += 1
+            r = RECEIPT[self.chemical]
+            asd = math.ceil(unit_req / r.output.unit)
+            for c in r.input:
+                MINIMAL_REQ[c.name].get(asd * c.unit) # unit_req * 
+
+            self.count += asd
+            self.rest += asd * r.output.unit
+        
 
     def get(self, unit):
-        while unit > self.rest:
-            self.create()
+        # print('get', self.chemical, unit, self.rest)
+        if self.rest == 0:
+            req = unit
+        else:
+            req = unit - self.rest
+        if req > 0:
+        # while unit > self.rest:
+            self.create(req)
         self.rest -= unit
     
     def __repr__(self):
@@ -88,20 +111,31 @@ def part1():
     MINIMAL_REQ['FUEL'].get(1)
     print(MINIMAL_REQ)
     print(MINIMAL_REQ['ORE'].count)
+    return MINIMAL_REQ['ORE'].count
 
-def process(output_chemical):
-    
-    MINIMAL_REQ[output_chemical].get(c.unit)
-    # inputs = RECEIPT[output_chemical].input
-    # for i in inputs:
-    #     print(i)
-    #     # i = 7 A
-    #     # factory = find_by_out(RECEIPT, i.name)
-    #     MINIMAL_REQ[i.name].add(factory.input.unit, factory.output.unit, i.input.unit)
-    #     if i.name != 'ORE':
-    #         process(RECEIPT, i.name)
-    #     # else:
-    #     #     print(i.unit)
+def part2():
+    # read_file('test5.txt')
+    read_file('input.txt')
+    # print(RECEIPT)
+    # process('FUEL')
+    fuel = int(1000000000000 // 720484)
+    fuel = 1887955
+    print('fuel', fuel)
+    MINIMAL_REQ['FUEL'].get(fuel)
+    # fuel = 0
+    try:
+        while True:
+            MINIMAL_REQ['FUEL'].get(1)
+            fuel += 1
+            if fuel % 1000000 == 0:
+                print(fuel)
+    except:
+        pass
+    print(fuel)
+    # print(MINIMAL_REQ)
+    # print(MINIMAL_REQ['ORE'].count)
 
-part1()
+
+# part1()
+part2()
 
