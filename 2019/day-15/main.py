@@ -217,7 +217,6 @@ N = 50
 table = [[' ' for i in range(0, N)] for j in range(0, N)]
 pos = (N//2,N//2)
 
-
 found_oxygen = False
 directions = []
 path = [1]
@@ -258,8 +257,8 @@ try:
             result = part1(amp)
             pos = get_new_pos(inverse, pos)
             
-            # _ = system('cls')
-            # dump(table, pos, N)
+            _ = system('cls')
+            dump(table, pos, N)
             # if min_oxygen_dist:
             #     print(min_oxygen_dist)
             # _ = input()
@@ -294,15 +293,12 @@ try:
             # print('path_result', path)
             if not min_oxygen_dist or len(path) < min_oxygen_dist:
                 min_oxygen_dist = len(path)
-                _ = system('cls')
-                dump(table, pos, N)
                 print(min_oxygen_dist)
-                _ = input()
         # print('current pos:', pos)
         
 
-        # _ = system('cls')
-        # dump(table, pos, N)
+        _ = system('cls')
+        dump(table, pos, N)
         # if min_oxygen_dist:
         #     print(min_oxygen_dist)
         # _ = input()
@@ -311,6 +307,8 @@ except:
 dump(table, pos, N)
 
 print(min_oxygen_dist)
+
+_ = input()
 
 minute = 0
 oxygen_everywhere = False
