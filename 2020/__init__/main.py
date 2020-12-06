@@ -3,14 +3,14 @@ def read_file(file):
         lines = [line[:-1] for line in file]
         return lines
 
-def part1(file):
+def part1(data):
     pass
 
-def part2(file):
+def part2(data):
     pass
 
 filename = "input.txt"
-filename = "sample.txt"
+filename = "sample_0.txt"
 
 data = read_file(filename)
 part1(data)
