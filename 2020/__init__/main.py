@@ -1,9 +1,17 @@
-def part1(file):
+def read_file(file):
+    with open(filename) as file:
+        lines = [line[:-1] for line in file]
+        return lines
+
+def part1(data):
     pass
 
-def part2(file):
+def part2(data):
     pass
 
-with open("input.txt") as file:
-    part1(file)
-    part2(file)
+filename = "input.txt"
+filename = "sample_0.txt"
+
+data = read_file(filename)
+part1(data)
+part2(data)
