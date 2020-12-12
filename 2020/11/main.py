@@ -161,7 +161,7 @@ def part2(data):
     print(occupied_spaces)
 
 filename = "input.txt"
-filename = "sample_0.txt"
+# filename = "sample_0.txt"
 
 data = read_file(filename)
 part1(data)
