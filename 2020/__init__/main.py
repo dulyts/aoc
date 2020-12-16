@@ -13,5 +13,6 @@ filename = "input.txt"
 filename = "sample_0.txt"
 
 data = read_file(filename)
+print(data)
 part1(data)
 part2(data)
