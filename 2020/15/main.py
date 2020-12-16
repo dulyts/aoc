@@ -17,7 +17,22 @@ def solve(data, n):
         last = last_spoken[last][1]-last_spoken[last][0]
         last_spoken[last] = (last_spoken[last][1], i+1)
     return last
-        
+
+def solve_2(data, n):
+    last_map = {}
+    for i in range(0, len(data)):
+        last_map[data[i]] = i+1
+    last_number = 0
+    for i in range(len(data)+2, n+1):
+        if last_number in last_map:
+            last_occurence = last_map[last_number]
+            last_map[last_number] = i-1
+            last_number = i-1 - last_occurence
+        else:
+            last_map[last_number] = i-1
+            last_number = 0
+    return last_number
+
 
 datas = [
     {
@@ -50,15 +65,19 @@ datas = [
         "result_2": 362
     },{
         "data": [11,0,1,10,5,19],
-        "result_1": 0,
-        "result_2": 0
+        "result_1": 870,
+        "result_2": 9136
     }
 ]
 
-for i in datas:
-    pr = solve(i["data"], 2020)
-    print(",".join([str(j) for j in i["data"]]), pr, pr == i["result_1"])
+# print(solve_2(datas[0]["data"], 2020))
+# exit()
 
 for i in datas:
-    pr = solve(i["data"], 30000000)
+    pr = solve_2(i["data"], 2020)
+    print(",".join([str(j) for j in i["data"]]), pr, pr == i["result_1"])
+
+print("------")
+for i in datas:
+    pr = solve_2(i["data"], 30000000)
     print(",".join([str(j) for j in i["data"]]), pr, pr == i["result_2"])
