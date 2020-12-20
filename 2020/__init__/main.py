@@ -1,4 +1,4 @@
-def read_file(file):
+def read_file(filename):
     with open(filename) as file:
         lines = [line[:-1] for line in file]
         return lines
