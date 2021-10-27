@@ -3,9 +3,9 @@
 [AdventOfCode](https://adventofcode.com/)
 
 ## years fulfillment
-- 2018 - 3 days
-- 2019 - 21 days
-- 2020 - 24 days
-- 2021 - TBD
+- 2018 - 3 days (py/js)
+- 2019 - 21 days (py/rust)
+- 2020 - 24 days (py)
+- 2021 - TBD (py?)
 
 ## waiting for 2021
