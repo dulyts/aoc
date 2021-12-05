@@ -92,8 +92,8 @@ const part2 = (data) => {
             let j = d.x1;
             for (let k = 0; k <= maxX - minX; k++) {
                 grid[i][j] += 1;
-                j += d.x1 < d.x2 ? 1 : -1;
-                i += d.y1 < d.y2 ? 1 : -1;
+                j += Math.sign(d.x2-d.x1);
+                i += Math.sign(d.y2-d.y1);
             }
         }
     });
