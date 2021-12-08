@@ -20,11 +20,11 @@ const part2 = (data) => {
     return null;
 };
 
-fs.readdirSync(__dirname).forEach(filename => {
-    if (filename.endsWith(".txt")) {
-        console.log(filename)
-        const data = loadData(filename);
-        console.log("part1", part1(JSON.parse(JSON.stringify(data))));
-        console.log("part2", part2(JSON.parse(JSON.stringify(data))));
-    }
-})
+const inputs = ["sample_0.txt"];
+// inputs.push("input.txt")
+inputs.forEach(filename => {
+    console.log(filename)
+    const data = loadData(filename);
+    console.log("part1", part1(data));
+    console.log("part2", part2(data));
+});

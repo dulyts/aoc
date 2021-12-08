@@ -149,9 +149,11 @@ const part2 = (data) => {
     return sum;
 };
 
-// const filename = "sample_0.txt";
-const filename = "input.txt";
-const data = loadData(filename);
-console.log("part1", part1(data));
-console.log("part2", part2(data));
-
+const inputs = ["sample_0.txt"];
+inputs.push("input.txt")
+inputs.forEach(filename => {
+    console.log(filename)
+    const data = loadData(filename);
+    console.log("part1", part1(data));
+    console.log("part2", part2(data));
+});
