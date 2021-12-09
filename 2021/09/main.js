@@ -53,7 +53,7 @@ const part2 = (data) => {
     let bussins = [];
 
     lowPoints.forEach(([i, j]) => {
-        const visited = new Set([]);
+        const visited = new Set();
         const b = findBussin(visited, data, i, j);
         bussins.push(b);
     });

@@ -149,11 +149,79 @@ const part2 = (data) => {
     return sum;
 };
 
+const part2_2 = (data) => {
+    let sum = 0;
+    data = [...data];
+    data.forEach((d) => {
+        const currentCounts = ["a", "b", "c", "d", "e", "f", "g"].reduce((prev, curr) => {
+            prev[curr] = 0;
+            return prev;
+        }, {});
+        const mapping = {};
+        d.s.forEach((s) => {
+            s.forEach((ss) => {
+                currentCounts[ss] += 1;
+            });
+        });
+        Object.keys(currentCounts).forEach((c) => {
+            if (currentCounts[c] === 4) mapping["e"] = c;
+            if (currentCounts[c] === 6) mapping["b"] = c;
+            if (currentCounts[c] === 9) mapping["f"] = c;
+        });
+        {
+            const c = d.s
+                .find((ss) => ss.length == 2)
+                .find((c) => c != mapping["f"]);
+            mapping["c"] = c;
+        }
+        Object.keys(currentCounts).forEach((c) => {
+            if (currentCounts[c] === 8 && c != mapping["c"]) mapping["a"] = c;
+        });
+
+        const dd = d.s
+            .find((ss) => {
+                return ss.length == 4;
+            })
+            .find((ss) => {
+                return (
+                    mapping["b"] != ss &&
+                    mapping["c"] != ss &&
+                    mapping["f"] != ss
+                );
+            });
+        mapping["d"] = dd;
+
+        Object.keys(currentCounts).forEach((c) => {
+            if (currentCounts[c] === 7 && c != mapping["d"]) mapping["g"] = c;
+        });
+
+        const tmp = {};
+        Object.keys(mapping).forEach((c) => {
+            tmp[mapping[c]] = c;
+        });
+
+        let num = "";
+        d.o.forEach((out) => {
+            const n = out
+                .map((o) => tmp[o])
+                .sort()
+                .join("");
+            if (numbers[n] != undefined) {
+                num += numbers[n];
+            }
+        });
+        sum += Number(num);
+    });
+
+    return sum;
+};
+
 const inputs = ["sample_0.txt"];
-inputs.push("input.txt")
-inputs.forEach(filename => {
-    console.log(filename)
+// inputs.push("input.txt");
+inputs.forEach((filename) => {
+    console.log(filename);
     const data = loadData(filename);
     console.log("part1", part1(data));
     console.log("part2", part2(data));
+    console.log("part2", part2_2(data));
 });
