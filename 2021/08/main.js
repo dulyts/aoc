@@ -217,11 +217,17 @@ const part2_2 = (data) => {
 };
 
 const inputs = ["sample_0.txt"];
-// inputs.push("input.txt");
+inputs.push("input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
     const data = loadData(filename);
     console.log("part1", part1(data));
+    
+    console.time("part2")
     console.log("part2", part2(data));
-    console.log("part2", part2_2(data));
+    console.timeEnd("part2")
+
+    console.time("part2_2")
+    console.log("part2_2", part2_2(data));
+    console.timeEnd("part2_2")
 });
