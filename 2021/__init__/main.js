@@ -14,9 +14,11 @@ const loadData = (filename) => {
 };
 
 const part1 = (data) => {
+    data = JSON.parse(JSON.stringify(data));
     return null;
 };
 const part2 = (data) => {
+    data = JSON.parse(JSON.stringify(data));
     return null;
 };
 
