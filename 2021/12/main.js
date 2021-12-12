@@ -43,18 +43,19 @@ const asd = (data, currentNode, path) => {
     return count;
 };
 
-const hasTwiceVisitedSmallCave = (path, p) => {
-    const smallCaveCount = path
-        .filter((d) => d[0] === d[0].toLowerCase())
-        .reduce((prev, next) => {
-            if (prev[next]) prev[next] += 1;
-            else prev[next] = 1;
-            return prev;
-        }, {});
-    const twiceVisited = Object.keys(smallCaveCount).find(
-        (d) => smallCaveCount[d] === 2
-    );
-    return !!twiceVisited;
+const hasTwiceVisitedSmallCave = (path) => {
+    for (let i = 1; i < path.length; i++) {
+        const d = path[i];
+        if (d[0] === d[0].toLowerCase()) {
+            for (let j = i+1; j < path.length; j++) {
+                const d2 = path[j];
+                if (d === d2) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 };
 
 const asd2 = (data, currentNode, path) => {
@@ -67,7 +68,7 @@ const asd2 = (data, currentNode, path) => {
             d !== "start" &&
             (d[0] === d[0].toUpperCase() ||
                 path.indexOf(d) === -1 ||
-                !hasTwiceVisitedSmallCave(path, d))
+                !hasTwiceVisitedSmallCave(path))
         ) {
             count += asd2(data, d, [...path, d]);
         }
