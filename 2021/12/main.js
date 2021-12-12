@@ -6,20 +6,10 @@ const loadData = (filename) => {
         .readFileSync(filename, "utf8")
         .split(/\r?\n/)
         .slice(0, -1)
-        .map((d) => {
-            return d.split("-");
-        })
         .reduce((prev, next) => {
-            if (prev[next[0]]) {
-                prev[next[0]].push(next[1]);
-            } else {
-                prev[next[0]] = [next[1]];
-            }
-            if (prev[next[1]]) {
-                prev[next[1]].push(next[0]);
-            } else {
-                prev[next[1]] = [next[0]];
-            }
+            const [from, to] = next.split("-");
+            prev[from] = [...prev[from]||[], to]
+            prev[to] = [...prev[to]||[], from]
             return prev;
         }, {});
     // console.log(data);

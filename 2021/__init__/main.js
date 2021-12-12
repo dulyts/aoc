@@ -1,5 +1,4 @@
 const fs = require("fs");
-const path = require('path');
 
 const loadData = (filename) => {
     const data = fs
@@ -9,7 +8,7 @@ const loadData = (filename) => {
         .map((d) => {
             return d;
         });
-    console.log(data)
+    console.log(data);
     return data;
 };
 
@@ -23,9 +22,9 @@ const part2 = (data) => {
 };
 
 const inputs = ["sample_0.txt"];
-// inputs.push("input.txt")
-inputs.forEach(filename => {
-    console.log(filename)
+// inputs.push("input.txt");
+inputs.forEach((filename) => {
+    console.log(filename);
     const data = loadData(filename);
     console.log("part1", part1(data));
     console.log("part2", part2(data));
