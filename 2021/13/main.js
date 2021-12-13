@@ -109,7 +109,7 @@ const part2 = (data) => {
         const [x, y] = d;
         grid[y][x] = 1;
     });
-    data.folds.some((fold, foldNumber) => {
+    data.folds.some(fold => {
         const [dir, num] = fold;
         if (dir == "y") {
             currMaxY = num;
@@ -119,9 +119,9 @@ const part2 = (data) => {
             for (let i = 0; i < currMaxY; i++) {
                 for (let j = 0; j < currMaxX; j++) {
                     newGrid[i][j] += grid[i][j];
-                    const ii = currMaxY * 2;
+                    const ii = currMaxY * 2- i;
                     if (ii < grid.length) {
-                        newGrid[i][j] += grid[ii-i][j];
+                        newGrid[i][j] += grid[ii][j];
                     }
                 }
             }
@@ -136,16 +136,16 @@ const part2 = (data) => {
             for (let i = 0; i < currMaxY; i++) {
                 for (let j = 0; j < currMaxX; j++) {
                     newGrid[i][j] += grid[i][j];
-                    const jj = currMaxX * 2;
+                    const jj = currMaxX * 2-j;
                     if (jj < grid[i].length) {
-                        newGrid[i][j] += grid[i][jj-j];
+                        newGrid[i][j] += grid[i][jj];
                     }
                 }
             }
             grid = newGrid;
         }
     });
-    for (let i = 0; i < grid.length; i++) {
+    for (let i = 0; i < currMaxY; i++) {
         console.log(grid[i].map((d) => (d == 0 ? " " : "█")).join(""));
     }
 
