@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { performance } = require("perf_hooks");
 
 const isEqualNode = (n1, n2) => {
     return n1.x === n2.x && n1.y === n2.y;
@@ -158,10 +159,9 @@ const part2 = (data) => {
         for (let j = 0; j < map[i].length; j++) {
             const ii = Math.floor(i / data.length);
             const jj = Math.floor(j / data.length);
-            const newValue =
-                data[i % data.length][j % data[i % data.length].length] +
-                ii +
-                jj;
+            const smallIndexI = i % data.length;
+            const smallIndexJ = j % data[smallIndexI].length;
+            const newValue = data[smallIndexI][smallIndexJ] + ii + jj;
             map[i][j] = newValue > 9 ? (newValue % 10) + 1 : newValue;
         }
     }
@@ -179,5 +179,8 @@ inputs.forEach((filename) => {
     console.log(filename);
     const data = loadData(filename);
     console.log("part1", part1(data));
+    const t1 = performance.now();
     console.log("part2", part2(data));
+    const t2 = performance.now();
+    console.log(t2 - t1, "ms");
 });
