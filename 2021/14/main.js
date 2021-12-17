@@ -1,5 +1,17 @@
 const fs = require("fs");
 
+class DefaultDict {
+    constructor(defaultInit) {
+      return new Proxy({}, {
+        get: (target, name) => name in target ?
+          target[name] :
+          (target[name] = typeof defaultInit === 'function' ?
+            new defaultInit().valueOf() :
+            defaultInit)
+      })
+    }
+  }
+
 const loadData = (filename) => {
     const data = fs.readFileSync(filename, "utf8").split(/\r?\n/).slice(0, -1);
     // .map((d) => {
@@ -24,10 +36,9 @@ const loadData = (filename) => {
 
 const part1 = (data) => {
     data = JSON.parse(JSON.stringify(data));
-    const counts = {};
+    const counts = new DefaultDict(Number);
     data.init.forEach((d) => {
-        if (counts[d]) counts[d] += 1;
-        else counts[d] = 1;
+        counts[d] += 1;
     });
     let result = data.init;
     for (let i = 0; i < 10; i++) {
@@ -63,35 +74,30 @@ const part1 = (data) => {
 };
 const part2 = (data) => {
     data = JSON.parse(JSON.stringify(data));
-    let pairs = {};
+    let pairs = new DefaultDict(Number);
     let j = 0;
     const result = data.init;
-    const counts = {};
+    const counts = new DefaultDict(Number);
     while (j < result.length - 1) {
         const curr = result[j] + result[j + 1];
-        if (pairs[curr]) pairs[curr] += 1;
-        else pairs[curr] = 1;
-        if (counts[result[j]]) counts[result[j]] += 1;
-        else counts[result[j]] = 1;
+        pairs[curr] += 1;
+        counts[result[j]] += 1;
         j++;
     }
-    if (counts[result[j]]) counts[result[j]] += 1;
-    else counts[result[j]] = 1;
+    counts[result[j]] += 1;
     for (let i = 0; i < 40; i++) {
-        const newPairs = {};
+        const newPairs = new DefaultDict(Number);
         Object.keys(pairs).forEach((p) => {
             const count = pairs[p];
             const [left, right] = p.split("");
             const newChar = data.trans[p];
-            if (counts[newChar]) counts[newChar] += count;
-            else counts[newChar] = count;
-            if (newPairs[left + newChar]) newPairs[left + newChar] += count;
-            else newPairs[left + newChar] = count;
-            if (newPairs[newChar + right]) newPairs[newChar + right] += count;
-            else newPairs[newChar + right] = count;
+            counts[newChar] += count
+            newPairs[left + newChar] += count;
+            newPairs[newChar + right] += count;
         });
         pairs = newPairs;
     }
+
     let max = 0;
     let maxChar = null;
     let min = Infinity;
@@ -106,7 +112,7 @@ const part2 = (data) => {
             minChar = c;
         }
     });
-    return (max - min);
+    return max - min;
 };
 
 const inputs = ["sample_0.txt"];
