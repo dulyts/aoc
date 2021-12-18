@@ -163,8 +163,9 @@ const explodeFourPair = (curr, depth) => {
 
 const part2 = (data) => {
     let max = 0;
-    for (let i = 0; i < data.length - 1; i++) {
-        for (let j = i + 1; j < data.length; j++) {
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < data.length; j++) {
+            if (i === j) continue;
             const a1 = data[i];
             const a2 = data[j];
 
@@ -172,25 +173,12 @@ const part2 = (data) => {
             addition.addChild(parseData(a1));
             addition.addChild(parseData(a2));
             reduce(addition);
-            let resultStr = print(addition);
-            resultStr = resultStr
+            const resultStr = print(addition)
                 .replace(/\[/g, "(3*")
                 .replace(/\]/g, ")")
                 .replace(/\,/g, "+2*");
             const result = eval(resultStr);
-            if (result > max) max = result;
-
-            const addition2 = new Node();
-            addition2.addChild(parseData(a2));
-            addition2.addChild(parseData(a1));
-            reduce(addition2);
-            let resultStr2 = print(addition2);
-            resultStr2 = resultStr2
-                .replace(/\[/g, "(3*")
-                .replace(/\]/g, ")")
-                .replace(/\,/g, "+2*");
-            const result2 = eval(resultStr2);
-            if (result2 > max) max = result2;
+            max = Math.max(max, result);
         }
     }
     return max;
