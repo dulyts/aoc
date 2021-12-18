@@ -70,6 +70,7 @@ const magnitude = (node) => {
 
 const part1 = (data) => {
     let actualResult = parseData(data[0]);
+
     // console.log("start:          ", print(actualResult));
     for (let i = 1; i < data.length; i++) {
         const newResult = new Node();
@@ -80,18 +81,6 @@ const part1 = (data) => {
         // console.log("after addition: ", print(actualResult));
         reduce(actualResult);
     }
-
-    let resultStr = print(actualResult);
-    resultStr = resultStr
-        .replace(/\[/g, "(3*")
-        .replace(/\]/g, ")")
-        .replace(/\,/g, "+2*");
-    // return eval(resultStr);
-
-    // const result1 = eval(resultStr);
-    // const result2 = magnitude(actualResult);
-    // console.log(result1, result2);
-    // return result1;
 
     return magnitude(actualResult);
 };
