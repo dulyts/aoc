@@ -1,34 +1,21 @@
 const fs = require("fs");
+const { performance } = require("perf_hooks");
 
-class Node {
-    constructor(value) {
-        this.parent = null;
-        this.left = null;
-        this.right = null;
-        this.value = value;
-        this.isLeaf = Number.isInteger(value);
-    }
+const { Node } = require("../../js-lib/binary-tree");
 
-    addChild(node) {
-        node.parent = this;
-        if (!this.left) this.left = node;
-        else this.right = node;
-    }
+Node.prototype.explode = function () {
+    this.left = null;
+    this.right = null;
+    this.value = 0;
+    this.isLeaf = true;
+};
 
-    explode() {
-        this.left = null;
-        this.right = null;
-        this.value = 0;
-        this.isLeaf = true;
-    }
-
-    split() {
-        this.addChild(new Node(Math.floor(this.value / 2)));
-        this.addChild(new Node(Math.ceil(this.value / 2)));
-        this.value = null;
-        this.isLeaf = false;
-    }
-}
+Node.prototype.split = function () {
+    this.addChild(new Node(Math.floor(this.value / 2)));
+    this.addChild(new Node(Math.ceil(this.value / 2)));
+    this.value = null;
+    this.isLeaf = false;
+};
 
 const loadData = (filename) => {
     const data = fs
@@ -43,7 +30,6 @@ const loadData = (filename) => {
 };
 
 const print = (node) => {
-    if (!node) return "(?)";
     if (node.isLeaf) {
         return node.value;
     }
@@ -53,23 +39,33 @@ const print = (node) => {
 const parseData = (data) => {
     let rootNode = new Node();
     let actualNode = rootNode;
-    data.split("").forEach((c) => {
-        if (c === ",") {
-        } else if (c === "[") {
-            const newNode = new Node();
-            actualNode.addChild(newNode);
-            actualNode = newNode;
-        } else if (c === "]") {
-            actualNode = actualNode.parent;
-        } else {
-            const leaf = new Node(Number(c));
-            actualNode.addChild(leaf);
-        }
-    });
-    rootNode = rootNode.left;
-    rootNode.parent = null;
+    data.slice(1)
+        .split("")
+        .forEach((c) => {
+            switch (c) {
+                case ",":
+                    break;
+                case "[":
+                    const newNode = new Node();
+                    actualNode.addChild(newNode);
+                    actualNode = newNode;
+                    break;
+                case "]":
+                    actualNode = actualNode.parent;
+                    break;
+                default:
+                    const leaf = new Node(Number(c));
+                    actualNode.addChild(leaf);
+                    break;
+            }
+        });
     // console.log(rootNode)
     return rootNode;
+};
+
+const magnitude = (node) => {
+    if (node.isLeaf) return node.value;
+    return 3 * magnitude(node.left) + 2 * magnitude(node.right);
 };
 
 const part1 = (data) => {
@@ -90,7 +86,14 @@ const part1 = (data) => {
         .replace(/\[/g, "(3*")
         .replace(/\]/g, ")")
         .replace(/\,/g, "+2*");
-    return eval(resultStr);
+    // return eval(resultStr);
+
+    // const result1 = eval(resultStr);
+    // const result2 = magnitude(actualResult);
+    // console.log(result1, result2);
+    // return result1;
+
+    return magnitude(actualResult);
 };
 
 const reduce = (actualResult) => {
@@ -173,22 +176,21 @@ const part2 = (data) => {
             addition.addChild(parseData(a1));
             addition.addChild(parseData(a2));
             reduce(addition);
-            const resultStr = print(addition)
-                .replace(/\[/g, "(3*")
-                .replace(/\]/g, ")")
-                .replace(/\,/g, "+2*");
-            const result = eval(resultStr);
+            const result = magnitude(addition);
             max = Math.max(max, result);
         }
     }
     return max;
 };
 
+let start = null;
 const inputs = ["sample_0.txt"];
 inputs.push("input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
     const data = loadData(filename);
-    console.log("part1", part1(data));
-    console.log("part2", part2(data));
+    start = performance.now();
+    console.log("part1", part1(data), " | ", performance.now() - start, "ms");
+    start = performance.now();
+    console.log("part2", part2(data), " | ", performance.now() - start, "ms");
 });
