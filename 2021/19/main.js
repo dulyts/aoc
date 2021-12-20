@@ -143,8 +143,8 @@ const process = (data) => {
 };
 
 const inputs = ["sample_0.txt"];
-// inputs.push("input.txt");
-inputs.push("bubu_day19_input.txt");
+inputs.push("input.txt");
+// inputs.push("bubu_day19_input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
     const data = loadData(filename);
