@@ -100,9 +100,9 @@ const process = (data) => {
         processed.push(curr);
         for (let i = 0; i < data.length; i++) {
             if (processed.indexOf(i) === -1) {
-                // const start = performance.now();
+                const start = performance.now();
                 const foundRelativeOffset = findOverlap(data[curr], data[i]);
-                // console.log(performance.now() - start, "ms");
+                console.log(performance.now() - start, "ms");
                 if (!foundRelativeOffset) continue;
                 q.push(i);
                 processed.push(i);
@@ -143,7 +143,8 @@ const process = (data) => {
 };
 
 const inputs = ["sample_0.txt"];
-inputs.push("input.txt");
+// inputs.push("input.txt");
+inputs.push("bubu_day19_input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
     const data = loadData(filename);
