@@ -261,91 +261,57 @@ const part2 = (data) => {
                 .map((dd) => Array(zzz.length).fill(false))
         );
 
-    // let globalCount = 0;
-    // data.forEach((d, dIdx) => {
-    //     console.log(dIdx, ":", d.coords, d.state);
-    //     let i = xxx.indexOf(d.coords.x[0]);
-    //     let ii = d.coords.x[0] === d.coords.x[1];
-    //     // console.log("ii", ii)
-    //     while (xxx[i] < d.coords.x[1] || ii) {
-    //         ii = false;
-    //         let j = yyy.indexOf(d.coords.y[0]);
-    //         let jj = d.coords.y[0] === d.coords.y[1];
-    //         // console.log("jj", jj)
-    //         while (yyy[j] < d.coords.y[1] || jj) {
-    //             jj = false;
-    //             let k = zzz.indexOf(d.coords.z[0]);
-    //             let kk = d.coords.z[0] === d.coords.z[1];
-    //             // console.log("kk", kk)
-    //             while (zzz[k] < d.coords.z[1] || kk) {
-    //                 kk = false;
-    //                 // const asd =
-    //                 //     (d.state === "on" ? 1 : -1) *
-    //                 //     (Math.abs((xxx[i + 1]? xxx[i + 1] : xxx[i]+1) - xxx[i]) + 0) * // prettier-ignore
-    //                 //     (Math.abs((yyy[j + 1]? yyy[j + 1] : yyy[j]+1) - yyy[j]) + 0) * // prettier-ignore
-    //                 //     (Math.abs((zzz[k + 1]? zzz[k + 1] : zzz[k]+1) - zzz[k]) + 0);
-    //                 // console.log(xxx[i], yyy[j], zzz[k], d.state === "on", asd);
-    //                 if ((d.state === "on") !== grid[i][j][k]) {
-    //                     console.log(xxx[i], yyy[j], zzz[k], d.state === "on");
-    //                     grid[i][j][k] = d.state === "on";
-    //                 }
-    //                 // globalCount += asd;
-
-    //                 k++;
-    //             }
-    //             j++;
-    //         }
-    //         i++;
-    //     }
-
-    let globalCount = 0;
     data.forEach((d, dIdx) => {
         console.log(dIdx, ":", d.coords, d.state);
-        let countX = 1;
-        let countY = 1;
-        let countZ = 1;
         let i = xxx.indexOf(d.coords.x[0]);
-        while (xxx[i] < d.coords.x[1]) {
-            countX++;
+        let ii = true;
+        while (xxx[i] < d.coords.x[1] || ii) {
+            ii = false;
+            let j = yyy.indexOf(d.coords.y[0]);
+            let jj = true;
+            while (yyy[j] < d.coords.y[1] || jj) {
+                jj = false;
+                let k = zzz.indexOf(d.coords.z[0]);
+                let kk = true;
+                while (zzz[k] < d.coords.z[1] || kk) {
+                    kk = false;
+                    if ((d.state === "on") !== grid[i][j][k]) {
+                        // console.log(xxx[i], yyy[j], zzz[k], d.state === "on");
+                        grid[i][j][k] = d.state === "on";
+                    }
+                    k++;
+                }
+                j++;
+            }
             i++;
         }
-
-        let j = yyy.indexOf(d.coords.y[0]);
-        while (yyy[j] < d.coords.y[1]) {
-            countY++;
-            j++;
-        }
-        let k = zzz.indexOf(d.coords.z[0]);
-        while (zzz[k] < d.coords.z[1]) {
-            countZ++;
-            k++;
-        }
-
-        const cc = countX * countY * countZ;
-        console.log(cc);
-        if (d.state === "on") {
-            globalCount += cc;
-        } else {
-            globalCount -= cc;
-        }
-        console.log("globalCount", globalCount);
-        // console.log(count);
-        // console.log("--------------");
     });
-    console.log(globalCount);
-    return globalCount;
 
     let count = 0;
-    for (let i = 0; i < xxx.length - 1; i++) {
-        for (let j = 0; j < yyy.length - 1; j++) {
-            for (let k = 0; k < zzz.length - 1; k++) {
+    for (let i = 0; i <= xxx.length - 1; i++) {
+        for (let j = 0; j <= yyy.length - 1; j++) {
+            for (let k = 0; k <= zzz.length - 1; k++) {
                 // console.log(xxx[i], yyy[j], zzz[k], grid[i][j][k]);
                 // if (grid[i][j][k] || grid[i-1][j-1][k-1]) {
                 if (grid[i][j][k]) {
-                    count +=
-                            (Math.abs(xxx[i+1] - xxx[i]) + 0) * // prettier-ignore
-                            (Math.abs(yyy[j+1] - yyy[j]) + 0) * // prettier-ignore
-                            (Math.abs(zzz[k+1] - zzz[k]) + 0); // prettier-ignore
+                    let asd = 1;
+                    
+                    if (i !== xxx.length -1) {
+                        asd *= (Math.abs(xxx[i+1] - xxx[i]) + 0) // prettier-ignore
+                    // } else {
+                    //     asd +=1;
+                    }
+                    if (j !== yyy.length -1) {
+                        asd *= (Math.abs(yyy[j+1] - yyy[j]) + 0) // prettier-ignore
+                    // } else {
+                    //     asd +=1;
+                    }
+                    if (k !== zzz.length -1) {
+                        asd *= (Math.abs(zzz[k+1] - zzz[k]) + 0); // prettier-ignore
+                    // } else {
+                    //     asd +=1;
+                    }
+                    count += asd;
                 }
             }
         }
@@ -360,7 +326,7 @@ const part2 = (data) => {
 const inputs = [
     "sample_0.txt",
     // "sample_1.txt",
-    // "sample_2.txt",
+    "sample_2.txt",
 ];
 // inputs.push("input.txt");
 inputs.forEach((filename) => {
