@@ -16,24 +16,23 @@ const charPoint = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split(
     ""
 );
 
+const calcScore = (commons) =>
+    commons
+        .map((c) => charPoint.findIndex((cc) => cc === c) + 1)
+        .reduce((p, c) => p + c, 0);
+
 const part1 = (data) => {
     data = JSON.parse(JSON.stringify(data));
-    data = data.map((d) => {
-        const len = d.length;
-        return [d.slice(0, len / 2), d.slice(len / 2, len)];
-    });
     const commons = [];
     data.forEach((row) => {
-        const fst = row[0].split("");
-        const snd = row[1].split("");
+        const len = row.length;
+        const fst = row.slice(0, len / 2).split("");
+        const snd = row.slice(len / 2, len).split("");
 
         const filteredArray = fst.filter((value) => snd.includes(value));
         commons.push(filteredArray[0]);
     });
-    const sum = commons
-        .map((c) => charPoint.findIndex((cc) => cc === c) + 1)
-        .reduce((p, c) => p + c, 0);
-    return sum;
+    return calcScore(commons);
 };
 const part2 = (data) => {
     data = JSON.parse(JSON.stringify(data));
@@ -48,10 +47,7 @@ const part2 = (data) => {
         );
         commons.push(filteredArray[0]);
     }
-    const sum = commons
-        .map((c) => charPoint.findIndex((cc) => cc === c) + 1)
-        .reduce((p, c) => p + c, 0);
-    return sum;
+    return calcScore(commons);
 };
 
 const inputs = ["sample_0.txt"];
