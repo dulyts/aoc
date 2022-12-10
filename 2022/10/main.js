@@ -56,7 +56,7 @@ const part2 = (data) => {
     let remainCycle = undefined;
     let currentCycle = 0;
     let i = 0;
-    let image = [[], [], [], [], [], [], []];
+    const image = new Array(7).fill(0).map(() => new Array(100).fill(" "));
     while (currentCycle <= 240) {
         switch (data[i][0]) {
             case "noop":
@@ -69,10 +69,8 @@ const part2 = (data) => {
         while (remainCycle > 0) {
             const col = currentCycle % 40;
             const row = image[Math.floor(currentCycle / 40)];
-            if (col < X || col > X + 2) {
-                row.push(" ");
-            } else {
-                row.push("█");
+            if (!(col < X || col > X + 2)) {
+                row[col] = "█";
             }
             remainCycle--;
             currentCycle++;
