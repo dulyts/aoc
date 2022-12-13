@@ -8,11 +8,6 @@ const loadData = (filename) => {
         .map((d) => {
             return eval(d);
         });
-    // const pairs = [];
-    // for (let i = 0; i < data.length; i += 3) {
-    //     pairs.push({ a: data[i], b: data[i + 1] });
-    // }
-    // console.log(pairs);
     return data;
 };
 
