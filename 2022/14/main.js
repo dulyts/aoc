@@ -86,16 +86,19 @@ const mapHas = (mapData, curr) => {
 const fallSand2 = (curr, mapData) => {
     let currentPos = { x: curr.x, y: curr.y };
     while (true) {
-        if (!mapHas(mapData, { x: currentPos.x, y: currentPos.y + 1 })) {
-            currentPos = { x: currentPos.x, y: currentPos.y + 1 };
+        let next = { x: currentPos.x, y: currentPos.y + 1 };
+        if (!mapHas(mapData, next)) {
+            currentPos = next;
             continue;
         }
-        if (!mapHas(mapData, { x: currentPos.x - 1, y: currentPos.y + 1 })) {
-            currentPos = { x: currentPos.x - 1, y: currentPos.y + 1 };
+        next = { x: currentPos.x - 1, y: currentPos.y + 1 };
+        if (!mapHas(mapData, next)) {
+            currentPos = next;
             continue;
         }
-        if (!mapHas(mapData, { x: currentPos.x + 1, y: currentPos.y + 1 })) {
-            currentPos = { x: currentPos.x + 1, y: currentPos.y + 1 };
+        next = { x: currentPos.x + 1, y: currentPos.y + 1 };
+        if (!mapHas(mapData, next)) {
+            currentPos = next;
             continue;
         }
         break;
