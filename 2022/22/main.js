@@ -15,7 +15,7 @@ class Node {
     }
 }
 
-const nextInDir = (map, pos, dir) => {
+const nextInDir = (map, pos, dir, size = 4) => {
     let currPos = {
         x: mod(pos.x + dir[0], map.length),
         y: mod(pos.y + dir[1], map[0].length),
@@ -26,6 +26,13 @@ const nextInDir = (map, pos, dir) => {
             x: mod(currPos.x + dir[0], map.length),
             y: mod(currPos.y + dir[1], map[0].length),
         };
+        if (map[currPos.x][currPos.y].val == "E") {
+            const xx = Math.floor(currPos.x / size);
+            const yy = Math.floor(currPos.y / size);
+            const xxx = currPos.x % size;
+            const yyy = currPos.y % size;
+            
+        }
     }
     if (map[currPos.x][currPos.y].val == "#") return null;
     if (map[currPos.x][currPos.y].val == ".") return currPos;
@@ -95,7 +102,6 @@ const loadData = (filename) => {
         });
     return { cmd, map };
 };
-
 const loadData2 = (filename) => {
     const data = fs
         .readFileSync(filename, "utf8")
@@ -111,15 +117,10 @@ const loadData2 = (filename) => {
         .map((d) => d.length)
         .reduce((prev, curr) => Math.max(prev, curr), 0);
 
-    const grid = new Array(4).fill(0).map(() => new Array(4).fill(new Array(N).fill(0).map(() => new Array(M).fill({ val: "E" }))));
-    // const map = new Array(N).fill(0).map(() => new Array(M).fill({ val: "E" }));
+    const map = new Array(N).fill(0).map(() => new Array(M).fill({ val: "E" }));
     data.slice(0, N).forEach((d, x) => {
         d.split("").forEach((dd, y) => {
-            const xx = Math.floor(x / 50);
-            const yy = Math.floor(y / 50);
-            let xxx = x % 50;
-            let yyy = y % 50;
-            if (dd != " ") map[xx][yy][xxx][yyy] = { val: dd, node: new Node(x, y) };
+            if (dd != " ") map[x][y] = { val: dd, node: new Node(x, y) };
         });
     });
     for (let i = 0; i < N; i++) {
