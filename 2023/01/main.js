@@ -22,17 +22,7 @@ const str2Num = {
     eight: 8,
     nine: 9,
 };
-const numStr = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-];
+const numStr = Object.keys(str2Num);
 
 const reverse = (str) => str.split("").reverse().join("");
 
