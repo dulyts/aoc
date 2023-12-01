@@ -11,7 +11,7 @@ const loadData = (filename) => {
     // console.log(data);
     return data;
 };
-const words = {
+const str2Num = {
     one: 1,
     two: 2,
     three: 3,
@@ -22,60 +22,46 @@ const words = {
     eight: 8,
     nine: 9,
 };
+const numStr = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+];
 
-function replaceRange(s, start, end, substitute) {
-    return s.substring(0, start) + substitute + s.substring(end);
-}
+const reverse = (str) => str.split("").reverse().join("");
+
+const reStraight = new RegExp(`\\d|${numStr.join("|")}`);
+const reReverse = new RegExp(`\\d|${numStr.map(reverse).join("|")}`);
 
 const part1 = (data) => {
     data = JSON.parse(JSON.stringify(data));
-    return data.reduce((p, c) => {
-        const nums = c.split("").reduce((prev, curr) => {
-            if (!isNaN(curr)) {
-                return [...prev, curr];
-            }
-            return prev;
-        }, []);
-        return p + Number(nums[0] + nums[nums.length - 1]);
+    return data.reduce((prev, curr) => {
+        const first = /\d/.exec(curr)[0];
+        const last = /\d/.exec(reverse(curr))[0];
+        return prev + 10 * Number(first) + Number(last);
     }, 0);
 };
 const part2 = (data) => {
     data = JSON.parse(JSON.stringify(data));
-    return data
-        .map((d) => {
-            let newRow = d;
-            for (let i = 0; i < newRow.length - 2; i++) {
-                let sub = newRow.substring(i);
-                Object.keys(words).map((w) => {
-                    if (sub.startsWith(w)) {
-                        // console.log(sub, w);
-                        newRow = replaceRange(
-                            newRow,
-                            i,
-                            // i + w.length,
-                            i,
-                            words[w]
-                        );
-                        i++;
-                    }
-                });
-            }
-            return newRow;
-        })
-        .reduce((p, c) => {
-            // console.log(c);
-            const nums = c.split("").reduce((prev, curr) => {
-                if (!isNaN(curr)) {
-                    return [...prev, curr];
-                }
-                return prev;
-            }, []);
-            // console.log(nums, Number(nums[0] + nums[nums.length - 1]));
-            return p + Number(nums[0] + nums[nums.length - 1]);
-        }, 0);
+    return data.reduce((prev, curr) => {
+        let first = reStraight.exec(curr)[0];
+        let last = reReverse.exec(reverse(curr))[0];
+        if (isNaN(first)) first = str2Num[first];
+        if (isNaN(last)) last = str2Num[reverse(last)];
+        return prev + 10 * Number(first) + Number(last);
+    }, 0);
 };
 
-const inputs = ["sample_0.txt", "sample_1.txt"];
+const inputs = [
+    "sample_0.txt",
+    // , "sample_1.txt"
+];
 inputs.push("input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
