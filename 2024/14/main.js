@@ -101,6 +101,21 @@ const part2 = (data, N, M) => {
             };
         });
 
+        // solved with entopy but slow
+        // let dist = 0;
+        // let count = 0;
+        // for (let i = 0; i < data.length; i++) {
+        //     for (let j = i + 1; j < data.length; j++) {
+        //         const a = data[i];
+        //         const b = data[j];
+        //         dist += Math.abs(a.p.x - b.p.x) + Math.abs(a.p.y - b.p.y);
+        //         count++;
+        //     }
+        // }
+        // entropy = dist / count;
+        // entropy < 40
+        // console.log(entropy);
+
         // calc image density
         const viewN = 10;
         const viewM = 10;
