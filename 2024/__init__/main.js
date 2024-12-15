@@ -21,7 +21,8 @@ const part2 = (data) => {
     return null;
 };
 
-const inputs = ["sample_0.txt"];
+const inputs = [];
+inputs.push("sample_0.txt");
 // inputs.push("input.txt");
 inputs.forEach((filename) => {
     console.log(filename);
